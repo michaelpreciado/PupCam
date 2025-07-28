@@ -204,3 +204,22 @@ MIT License - see LICENSE file for details
 **Made with ❤️ for dog lovers everywhere**
 
 *PupCam Mood Reader - Understanding your furry friend, one scan at a time!* 
+## 🚀 Vercel Deployment
+
+This app is now configured for Vercel! See `deploy-vercel.md` for detailed instructions.
+
+### Quick Deploy:
+1. Go to [vercel.com](https://vercel.com)
+2. Import this GitHub repository  
+3. Add environment variable: `OPENAI_API_KEY`
+4. Deploy!
+
+Your app will be available at: `https://your-app.vercel.app`
+
+### What's Included:
+- ✅ Serverless API functions
+- ✅ Static frontend hosting  
+- ✅ Automatic HTTPS
+- ✅ Global CDN
+- ✅ PWA support
+
