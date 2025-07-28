@@ -36,7 +36,7 @@ npm install
 
 # Set up environment variables
 cp env.example .env
-# Edit .env and add your OPENAI_API_KEY
+# Edit .env and add your OPENAI_API_Y
 
 # Start the development server
 npm run dev

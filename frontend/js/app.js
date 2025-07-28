@@ -255,41 +255,34 @@ class PupCamApp {
             // Detect objects in the video
             const predictions = await this.model.detect(this.video);
             
-            // Look for faces (people, dogs, cats, etc.) in predictions
-            const faceDetection = predictions.find(prediction => 
-                (prediction.class === 'person' || 
-                 prediction.class === 'dog' || 
-                 prediction.class === 'cat') && 
-                prediction.score > 0.3
-            );
-            
-            if (faceDetection) {
-                // Draw detection box
-                this.drawDetectionBox(faceDetection);
-                
-                // Vibrate device
-                this.vibrate(40);
-                
-                // Only analyze mood if it's a dog
-                if (faceDetection.class === 'dog') {
-                    const croppedImage = this.cropDogFace(faceDetection);
-                    await this.analyzeMood(croppedImage);
-                } else {
-                    // Just show detection for other faces
-                    console.log(`Detected ${faceDetection.class} face`);
-                }
-                
-            } else {
+            // Filter for likely faces (person, dog, cat)
+            const faceDetections = predictions.filter(p => (
+                p.class === 'person' || p.class === 'dog' || p.class === 'cat') && p.score > 0.2);
+
+            if (faceDetections.length === 0) {
                 this.showError('No face detected in frame');
+                return;
             }
+
+            // Pick the most confident detection
+            const bestDetection = faceDetections.sort((a, b) => b.score - a.score)[0];
+
+            // Draw detection box
+            this.drawDetectionBox(bestDetection);
             
+            // Vibrate device
+            this.vibrate(40);
+            
+            // Crop and analyze the face (always, regardless of class)
+            const croppedImage = this.cropDogFace(bestDetection);
+            await this.analyzeMood(croppedImage);
+
         } catch (error) {
             console.error('Scan error:', error);
-            this.showError('Failed to scan for dog');
+            this.showError('Failed to scan face');
         } finally {
             this.hideScanningState();
             this.isScanning = false;
-            
             // Resume continuous detection
             setTimeout(() => {
                 this.startContinuousDetection();
