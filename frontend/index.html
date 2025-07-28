@@ -29,7 +29,7 @@
                         'flip-in': 'flipIn 0.6s ease-out',
                         'scan': 'scan 2s ease-in-out',
                         'pulse-ring': 'pulseRing 2s infinite'
-                    },
+                        , "bounce-in": "bounceIn 0.8s ease-out"                    },
                     keyframes: {
                         flipIn: {
                             '0%': { transform: 'perspective(400px) rotateX(90deg)', opacity: '0' },
@@ -38,6 +38,11 @@
                             '80%': { transform: 'perspective(400px) rotateX(-5deg)' },
                             '100%': { transform: 'perspective(400px) rotateX(0deg)', opacity: '1' }
                         },
+                        bounceIn: {
+                            "0%": { transform: "scale(0.3)", opacity: "0" },
+                            "50%": { transform: "scale(1.05)" },
+                            "70%": { transform: "scale(0.9)" },
+                            "100%": { transform: "scale(1)", opacity: "1" }                        },
                         scan: {
                             '0%': { transform: 'translateY(-100%)', opacity: '0' },
                             '50%': { opacity: '1' },
@@ -47,7 +52,12 @@
                             '0%': { transform: 'scale(0.8)', opacity: '1' },
                             '50%': { transform: 'scale(1.2)', opacity: '0.3' },
                             '100%': { transform: 'scale(0.8)', opacity: '1' }
-                        }
+                        },
+                        bounceIn: {
+                            "0%": { transform: "scale(0.3)", opacity: "0" },
+                            "50%": { transform: "scale(1.05)" },
+                            "70%": { transform: "scale(0.9)" },
+                            "100%": { transform: "scale(1)", opacity: "1" }                        }
                     }
                 }
             }
@@ -101,17 +111,23 @@
         ></div>
         
         <!-- Top UI Elements -->
-        <div class="absolute top-0 left-0 right-0 p-4 pt-12 flex justify-between items-start">
+        <div class="absolute top-0 left-0 right-0 p-4 pt-12 flex justify-end items-start">
             <!-- Mood Result Badge -->
-            <div 
-                id="moodBadge" 
-                class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-full px-4 py-2 shadow-lg opacity-0 transform scale-0 transition-all duration-300"
-            >
-                <span id="moodEmoji" class="text-2xl mr-2">😊</span>
-                <span id="moodText" class="text-sm font-medium text-gray-900 dark:text-white">Happy</span>
-                <span id="confidenceText" class="text-xs text-gray-600 dark:text-gray-300 ml-1">(95%)</span>
             </div>
             
+        <!-- Center Mood Result -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div 
+                id="moodBadge" 
+                class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-3xl px-8 py-6 shadow-2xl opacity-0 transform scale-0 transition-all duration-500 pointer-events-auto max-w-sm mx-4"
+            >
+                <div class="text-center">
+                    <div id="moodEmoji" class="text-8xl mb-4">😊</div>
+                    <div id="moodText" class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Happy</div>
+                    <div id="confidenceText" class="text-lg text-gray-600 dark:text-gray-300">(95%)</div>
+                </div>
+            </div>
+        </div>
             <!-- Error Icon -->
             <div 
                 id="errorIcon" 

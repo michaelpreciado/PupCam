@@ -454,28 +454,33 @@ class PupCamApp {
     displayMoodResult(result) {
         const { mood, confidence } = result;
         
-        // Update badge content
-        document.getElementById('moodEmoji').textContent = this.moodEmojis[mood] || '🤔';
-        document.getElementById('moodText').textContent = mood.charAt(0).toUpperCase() + mood.slice(1);
-        document.getElementById('confidenceText').textContent = `(${confidence}%)`;
+        // Update badge content with enhanced styling
+        document.getElementById("moodEmoji").textContent = this.moodEmojis[mood] || "🤔";
+        document.getElementById("moodText").textContent = mood.charAt(0).toUpperCase() + mood.slice(1);
+        document.getElementById("confidenceText").textContent = `${confidence}% confident`;
         
-        // Show mood badge with flip animation
-        const badge = document.getElementById('moodBadge');
-        badge.style.opacity = '1';
-        badge.style.transform = 'scale(1)';
-        badge.classList.add('animate-flip-in');
+        // Show mood badge with dramatic center animation
+        const badge = document.getElementById("moodBadge");
+        badge.style.opacity = "1";
+        badge.style.transform = "scale(1)";
+        badge.classList.add("animate-flip-in");
+        
+        // Add a subtle pulse effect
+        setTimeout(() => {
+            badge.style.animation = "pulse 2s ease-in-out";
+        }, 600);
         
         // Show share button
-        this.showElement('shareContainer');
+        this.showElement("shareContainer");
         
-        // Auto-hide after 5 seconds
+        // Auto-hide after 4 seconds (shorter for center display)
         setTimeout(() => {
-            this.hideElement('moodBadge');
-            this.hideElement('shareContainer');
-            badge.classList.remove('animate-flip-in');
-        }, 5000);
-    }
-    
+            this.hideElement("moodBadge");
+            this.hideElement("shareContainer");
+            badge.classList.remove("animate-flip-in");
+            badge.style.animation = "";
+        }, 4000);
+    }    
     shareResult() {
         if (!this.lastMoodResult) return;
         
