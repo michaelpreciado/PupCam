@@ -13,6 +13,9 @@
   "functions": {
     "api/analyze.js": {
       "maxDuration": 30
+    },
+    "api/feedback.js": {
+      "maxDuration": 10
     }
   }
 }
