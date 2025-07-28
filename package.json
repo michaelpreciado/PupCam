@@ -1,0 +1,23 @@
+{
+  "name": "pupcam-mood-reader",
+  "version": "1.0.0",
+  "description": "A PWA that analyzes dog moods using camera vision and AI",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "openai": "^4.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": ["pwa", "dog", "mood", "camera", "ai", "tensorflow"],
+  "author": "",
+  "license": "MIT"
+} 

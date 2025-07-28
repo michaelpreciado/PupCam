@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        .download-btn { background: #10b981; color: white; padding: 10px 20px; margin: 5px; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>PupCam PWA Icon Generator</h1>
+    <p>Click the buttons below to download the generated icons:</p>
+    
+    <div id="canvases"></div>
+    <div id="downloads"></div>
+    
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        const canvasContainer = document.getElementById('canvases');
+        const downloadContainer = document.getElementById('downloads');
+        
+        sizes.forEach(size => {
+            // Create canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            canvas.style.width = '100px';
+            canvas.style.height = '100px';
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#10b981');
+            gradient.addColorStop(1, '#059669');
+            
+            // Draw background
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Add rounded corners effect
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.2);
+            ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            
+            // Draw emoji
+            ctx.font = `${size * 0.6}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🐕', size / 2, size / 2);
+            
+            // Add to page
+            canvasContainer.appendChild(canvas);
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.className = 'download-btn';
+            link.textContent = `Download ${size}x${size}`;
+            link.download = `icon-${size}x${size}.png`;
+            link.href = canvas.toDataURL();
+            downloadContainer.appendChild(link);
+        });
+        
+        // Auto-download all icons
+        setTimeout(() => {
+            const links = document.querySelectorAll('.download-btn');
+            links.forEach((link, index) => {
+                setTimeout(() => link.click(), index * 500);
+            });
+        }, 1000);
+    </script>
+</body>
+</html> 
