@@ -588,43 +588,38 @@ class PupCamApp {
             }
         }
     }
-}
 
-// Initialize the app when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new PupCamApp();
-}); 
     // Learning and feedback methods
     generateSessionId() {
-        return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        return "session_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
     }
 
-    async sendFeedback(predictedMood, actualMood, confidence, notes = '') {
+    async sendFeedback(predictedMood, actualMood, confidence, notes = "") {
         try {
             const feedbackData = {
                 sessionId: this.sessionId,
                 predictedMood: predictedMood,
                 actualMood: actualMood,
                 confidence: confidence,
-                imageHash: this.hashCode(this.lastAnalyzedImage || ''),
+                imageHash: this.hashCode(this.lastAnalyzedImage || ""),
                 notes: notes,
                 timestamp: new Date().toISOString()
             };
 
-            const response = await fetch('/api/feedback', {
-                method: 'POST',
+            const response = await fetch("/api/feedback", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify(feedbackData)
             });
 
             if (response.ok) {
-                console.log('✅ Feedback sent for learning');
-                this.showTemporaryMessage('Thanks! This helps PupCam learn 🧠');
+                console.log("✅ Feedback sent for learning");
+                this.showTemporaryMessage("Thanks! This helps PupCam learn 🧠");
             }
         } catch (error) {
-            console.error('Failed to send feedback:', error);
+            console.error("Failed to send feedback:", error);
         }
     }
 
@@ -640,8 +635,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showFeedbackPrompt(result) {
         // Create feedback UI overlay
-        const overlay = document.createElement('div');
-        overlay.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
+        const overlay = document.createElement("div");
+        overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50";
         overlay.innerHTML = `
             <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 mx-4 max-w-sm shadow-xl">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Help PupCam Learn! 🧠</h3>
@@ -651,15 +646,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 </p>
                 <div class="space-y-3">
                     <button id="feedback-correct" class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
-                        ✅ Yes, that's correct!
+                        ✅ Yes, that is correct!
                     </button>
                     <div class="grid grid-cols-2 gap-2">
                         ${Object.keys(this.moodEmojis).map(mood => 
                             mood !== result.mood ? 
                             `<button class="feedback-mood bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white py-2 px-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm" data-mood="${mood}">
                                 ${this.moodEmojis[mood]} ${mood}
-                            </button>` : ''
-                        ).join('')}
+                            </button>` : ""
+                        ).join("")}
                     </div>
                     <button id="feedback-skip" class="w-full bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
                         Skip
@@ -671,19 +666,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(overlay);
 
         // Handle feedback responses
-        document.getElementById('feedback-correct').addEventListener('click', () => {
-            this.sendFeedback(result.mood, result.mood, result.confidence, 'User confirmed correct');
+        document.getElementById("feedback-correct").addEventListener("click", () => {
+            this.sendFeedback(result.mood, result.mood, result.confidence, "User confirmed correct");
             document.body.removeChild(overlay);
         });
 
-        document.getElementById('feedback-skip').addEventListener('click', () => {
+        document.getElementById("feedback-skip").addEventListener("click", () => {
             document.body.removeChild(overlay);
         });
 
-        document.querySelectorAll('.feedback-mood').forEach(button => {
-            button.addEventListener('click', () => {
+        document.querySelectorAll(".feedback-mood").forEach(button => {
+            button.addEventListener("click", () => {
                 const actualMood = button.dataset.mood;
-                this.sendFeedback(result.mood, actualMood, result.confidence, 'User correction');
+                this.sendFeedback(result.mood, actualMood, result.confidence, "User correction");
                 document.body.removeChild(overlay);
             });
         });
@@ -694,4 +689,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.removeChild(overlay);
             }
         }, 15000);
-    }
+    }}
+
+// Initialize the app when DOM is loaded
+
+
+// Initialize the app when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+    new PupCamApp();
+});
