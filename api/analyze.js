@@ -60,7 +60,7 @@ ACCURACY GUIDELINES:
 - Low confidence (20-49%) for ambiguous or unclear signals
 - Very low confidence (<20%) for poor image quality or mixed signals
 
-OUTPUT FORMAT: {"mood": "exact category name", "confidence": number, "reasoning": "brief explanation of key indicators observed"}`;
+OUTPUT FORMAT (JSON): {"mood": "exact category name", "confidence": number, "reasoning": "brief explanation of key indicators observed"}`;
 
     // Add learning context if feedback is provided
     if (feedback && feedback.corrections) {
