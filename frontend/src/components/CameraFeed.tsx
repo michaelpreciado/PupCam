@@ -1,8 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import LensFX from './LensFX';
 
-const CameraFeed: React.FC = () => {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+interface Props {
+  videoRef: React.RefObject<HTMLVideoElement>;
+}
+
+const CameraFeed: React.FC<Props> = ({ videoRef }) => {
 
   useEffect(() => {
     let stream: MediaStream;
@@ -47,4 +50,4 @@ const CameraFeed: React.FC = () => {
   );
 };
 
-export default CameraFeed; 
+export default CameraFeed;
