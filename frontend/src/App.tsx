@@ -3,6 +3,7 @@ import CameraFeed from './components/CameraFeed';
 import DetectionOverlay, { Detection } from './components/DetectionOverlay';
 import MoodCard from './components/MoodCard';
 import ScanButton from './components/ScanButton';
+import SaveButton from './components/SaveButton';
 
 interface MoodState {
   emoji: string;
@@ -77,11 +78,55 @@ const App: React.FC = () => {
     }
   };
 
+  const handleSave = () => {
+    if (!videoRef.current || !detection || !mood) return;
+    const [x, y, w, h] = detection.bbox;
+
+    let faceX = x, faceY = y, faceW = w, faceH = h;
+    if (detection.class === 'person') {
+      faceW = w * 0.7;
+      faceH = h * 0.4;
+      faceX = x + (w - faceW) / 2;
+      faceY = y + h * 0.1;
+    } else {
+      faceW = w * 0.6;
+      faceH = h * 0.5;
+      faceX = x + (w - faceW) / 2;
+      faceY = y + h * 0.15;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = faceW;
+    canvas.height = faceH;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.drawImage(
+      videoRef.current,
+      faceX,
+      faceY,
+      faceW,
+      faceH,
+      0,
+      0,
+      faceW,
+      faceH
+    );
+    ctx.fillStyle = 'white';
+    ctx.font = '20px sans-serif';
+    ctx.fillText(`${mood.label} (${mood.confidence}%)`, 10, 24);
+
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = `pupcam-${mood.label}.png`;
+    link.click();
+  };
+
   return (
     <main className="relative w-full h-dvh overflow-hidden select-none touch-none">
       <CameraFeed videoRef={videoRef} />
       <DetectionOverlay videoRef={videoRef} onDetection={setDetection} />
       <ScanButton onClick={handleScan} />
+      {mood && <SaveButton onClick={handleSave} />}
       <MoodCard mood={mood} />
     </main>
   );
