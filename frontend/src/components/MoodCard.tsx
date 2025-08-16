@@ -1,9 +1,18 @@
 import React from 'react';
 import LiquidGlass from './LiquidGlass';
 
-const MoodCard: React.FC = () => {
-  // Placeholder mood data; will be replaced by detection.
-  const mood = { emoji: '😌', label: 'Relaxed', confidence: 88 };
+interface Mood {
+  emoji: string;
+  label: string;
+  confidence: number;
+}
+
+interface Props {
+  mood: Mood | null;
+}
+
+const MoodCard: React.FC<Props> = ({ mood }) => {
+  if (!mood) return null;
 
   return (
     <div className="absolute inset-x-4 bottom-36 flex justify-center pointer-events-auto">
@@ -18,4 +27,4 @@ const MoodCard: React.FC = () => {
   );
 };
 
-export default MoodCard; 
+export default MoodCard;
