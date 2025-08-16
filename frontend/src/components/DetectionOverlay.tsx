@@ -15,6 +15,7 @@ interface Props {
 
 const DetectionOverlay: React.FC<Props> = ({ videoRef, onDetection }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const smoothBox = useRef<[number, number, number, number] | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -27,6 +28,22 @@ const DetectionOverlay: React.FC<Props> = ({ videoRef, onDetection }) => {
       } catch (err) {
         console.error('Failed to load detection model', err);
       }
+    }
+
+    function faceBox(det: cocoSsd.DetectedObject): [number, number, number, number] {
+      let [x, y, w, h] = det.bbox as [number, number, number, number];
+      if (det.class === 'person') {
+        w = w * 0.7;
+        h = h * 0.4;
+        x = x + (det.bbox[2] - w) / 2;
+        y = y + det.bbox[3] * 0.1;
+      } else {
+        w = w * 0.6;
+        h = h * 0.5;
+        x = x + (det.bbox[2] - w) / 2;
+        y = y + det.bbox[3] * 0.15;
+      }
+      return [x, y, w, h];
     }
 
     async function detectFrame() {
@@ -51,11 +68,31 @@ const DetectionOverlay: React.FC<Props> = ({ videoRef, onDetection }) => {
         if (faces.length > 0) {
           faces.sort((a, b) => b.score - a.score);
           const det = faces[0];
-          const [x, y, w, h] = det.bbox;
+          const target = faceBox(det);
+
+          // Smooth transition toward the new box
+          const alpha = 0.2;
+          if (!smoothBox.current) smoothBox.current = target;
+          const [sx, sy, sw, sh] = smoothBox.current;
+          const [tx, ty, tw, th] = target;
+          const newBox: [number, number, number, number] = [
+            sx + (tx - sx) * alpha,
+            sy + (ty - sy) * alpha,
+            sw + (tw - sw) * alpha,
+            sh + (th - sh) * alpha,
+          ];
+          smoothBox.current = newBox;
+
+          const [x, y, w, h] = newBox;
           ctx.strokeStyle = '#10b981';
           ctx.lineWidth = 4;
           ctx.strokeRect(x, y, w, h);
-          best = { bbox: [x, y, w, h], class: det.class, score: det.score };
+          ctx.fillStyle = '#10b981';
+          ctx.font = '18px sans-serif';
+          ctx.fillText(`${Math.round(det.score * 100)}%`, x, y - 8);
+          best = { bbox: newBox, class: det.class, score: det.score };
+        } else {
+          smoothBox.current = null;
         }
         onDetection && onDetection(best);
       } catch (err) {
